@@ -1,12 +1,14 @@
 package com.andregomez.workshopmongo.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.andregomez.workshopmongo.domain.User;
 import com.andregomez.workshopmongo.repository.UserRepository;
+import com.andregomez.workshopmongo.services.exception.ObjectNotFoundException;
 
 @Service //Anotation que avisa ao Spring que a classe será um serviço que pode ser injetável em outras classes.
 public class UserService {
@@ -16,6 +18,10 @@ public class UserService {
 	
 	public List<User> findAll() { // Método responsável por retornar todos os usuários do BD.
 		return repo.findAll(); // Retorna todos os objetos do tipo definido (neste caso, usuário)
-		
+	}
+	
+	public User findById(String id) {
+		Optional<User> obj = repo.findById(id); // Método do repositório onde você passa o Id e tem como retorno o usuário com o Id indicado.
+		return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado"));
 	}
 }
