@@ -1,14 +1,17 @@
 package com.andregomez.workshopmongo.resources;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.andregomez.workshopmongo.domain.User;
 import com.andregomez.workshopmongo.dto.UserDTO;
@@ -32,6 +35,14 @@ public class UserResource {
 	public ResponseEntity<UserDTO> findById(@PathVariable String id) { // O tipo de retorno do método é "UserDTO". O método recebe como argumento um id. E esse ID tem que casar com o ID da URL, por isso o "@PathVariable"
 		User obj = service.findById(id); // O objeto User recebe o findById
 		return ResponseEntity.ok().body(new UserDTO(obj)); // Converte "obj" pra "UserDTO"
+	}
+	
+	@RequestMapping(method=RequestMethod.POST) // 
+	public ResponseEntity<Void> insert(@RequestBody UserDTO objDto) {
+		User obj = service.fromDTO(objDto); // Converte DTO para user
+		obj = service.insert(obj);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri(); // Pega o endereço do novo obj inserido;
+		return ResponseEntity.created(uri).build(); // Created retorna uma resposta vazia, com o código 201, que é quando você cria um novo recurso. E retorna o cabeçalho com o endereço do novo rescurso.
 	}
 	
 }
