@@ -44,5 +44,10 @@ public class UserResource {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri(); // Pega o endereço do novo obj inserido;
 		return ResponseEntity.created(uri).build(); // Created retorna uma resposta vazia, com o código 201, que é quando você cria um novo recurso. E retorna o cabeçalho com o endereço do novo rescurso.
 	}
-	
+
+	@RequestMapping(value="/{id}", method=RequestMethod.DELETE) // Indica que esse método tem o valor de um "Id" e é um endPoint Rest no caminho "/users". GET é o método para obter informações no padrão Rest
+	public ResponseEntity<UserDTO> delete(@PathVariable String id) { // O tipo de retorno do método é "UserDTO". O método recebe como argumento um id. E esse ID tem que casar com o ID da URL, por isso o "@PathVariable"
+		service.delete(id); // O argumento ID indica o objeto a ser deletado
+		return ResponseEntity.noContent().build(); // Resposta com código 204, que serve quando você não precisa retornar nada.
+	}
 }
