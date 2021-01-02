@@ -50,4 +50,12 @@ public class UserResource {
 		service.delete(id); // O argumento ID indica o objeto a ser deletado
 		return ResponseEntity.noContent().build(); // Resposta com código 204, que serve quando você não precisa retornar nada.
 	}
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
+	public ResponseEntity<Void> update(@RequestBody UserDTO objDto, @PathVariable String id) {
+		User obj = service.fromDTO(objDto); // Converte DTO para user
+		obj.setId(id); // Garante que o obj tenha o ID da requisição
+		obj = service.update(obj);
+		return ResponseEntity.noContent().build(); // Resposta com código 204, que serve quando você não precisa retornar nada.
+	}
 }
