@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.andregomez.workshopmongo.domain.Post;
 import com.andregomez.workshopmongo.domain.User;
 import com.andregomez.workshopmongo.dto.UserDTO;
 import com.andregomez.workshopmongo.services.UserService;
@@ -57,5 +58,11 @@ public class UserResource {
 		obj.setId(id); // Garante que o obj tenha o ID da requisição
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build(); // Resposta com código 204, que serve quando você não precisa retornar nada.
+	}
+	
+	@RequestMapping(value="/{id}/posts", method=RequestMethod.GET) // Indica que esse método tem o valor de um "Id" e é um endPoint Rest no caminho "/posts". GET é o método para obter informações no padrão Rest
+	public ResponseEntity<List<Post>> findPosts(@PathVariable String id) { // Retorna uma lista de Post
+		User obj = service.findById(id); // Busca o usuário por ID
+		return ResponseEntity.ok().body(obj.getPosts()); // Retorna a lista de Post associada ao usuário indicado.
 	}
 }
