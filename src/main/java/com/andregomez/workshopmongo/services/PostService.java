@@ -1,5 +1,6 @@
 package com.andregomez.workshopmongo.services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,5 +24,10 @@ public class PostService {
 	
 	public List<Post> findByTitle(String text) {
 		return repo.searchTitle(text);
+	}
+	
+	public List<Post> fullSearch(String text, Date minDate, Date maxDate) { // A busca até uma determinada data tem que ser até às 24h deste dia, e não na primeira hora do dia (no caso, 0h)
+		maxDate = new Date(maxDate.getTime() + 24 * 60 * 60 * 1000); // Acrecenta 1 dia na data máxima para que se resolva a questão acima
+		return repo.fullSearch(text, minDate, maxDate);
 	}
 }

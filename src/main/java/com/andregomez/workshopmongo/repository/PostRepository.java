@@ -1,5 +1,6 @@
 package com.andregomez.workshopmongo.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -15,4 +16,7 @@ public interface PostRepository extends MongoRepository<Post, String>{ // objeto
 	List<Post> searchTitle(String text);
 	
 	List<Post> findByTitleContainingIgnoreCase(String text); // Esse método procura no título a String indicada, e ignora caixa alta (IgnoreCase).
+	
+	@Query("{ $and: [ { date: {$gte: ?1} }, { date: { $lte: ?2} } , { $or: [ { 'title': { $regex: ?0, $options: 'i' } }, { 'body': { $regex: ?0, $options: 'i' } }, { 'comments.text': { $regex: ?0, $options: 'i' } } ] } ] }")
+	List<Post> fullSearch(String text, Date minDate, Date maxDate); // São três parâmetros. O primeiro tem o valor de "0", o segundo de "1".
 }
