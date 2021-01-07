@@ -1,13 +1,17 @@
 package com.andregomez.workshopmongo.resources;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.andregomez.workshopmongo.domain.Post;
+import com.andregomez.workshopmongo.resources.util.URL;
 import com.andregomez.workshopmongo.services.PostService;
 
 @RestController // Indica que essa classe é um recurso Rest
@@ -21,5 +25,12 @@ public class PostResource {
 	public ResponseEntity<Post> findById(@PathVariable String id) { // O tipo de retorno do método é "UserDTO". O método recebe como argumento um id. E esse ID tem que casar com o ID da URL, por isso o "@PathVariable"
 		Post obj = service.findById(id); // O objeto User recebe o findById
 		return ResponseEntity.ok().body(obj); // Converte "obj" pra "UserDTO"
+	}
+	
+	@RequestMapping(value="/titlesearch", method=RequestMethod.GET) // Indica que esse método tem o valor de um "title" e é um endPoint Rest no caminho "/users". GET é o método para obter informações no padrão Rest
+	public ResponseEntity<List<Post>> findByTitle(@RequestParam(value="text", defaultValue="") String text) { // Procura numa lista de post o valor do parâmetro indicado
+		text = URL.decodeParam(text); // Decodifica o texto
+		List<Post> list = service.findByTitle(text); // A lista de psot recebe o resultado da busca
+		return ResponseEntity.ok().body(list); // retorna uma resposta cujo corpo vai ser a lista acima
 	}
 }

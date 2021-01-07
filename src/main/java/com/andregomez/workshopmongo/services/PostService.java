@@ -1,5 +1,6 @@
 package com.andregomez.workshopmongo.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,5 +19,9 @@ public class PostService {
 	public Post findById(String id) {
 		Optional<Post> obj = repo.findById(id); // Método do repositório onde você passa o Id e tem como retorno o usuário com o Id indicado.
 		return obj.orElseThrow(() -> new ObjectNotFoundException("Post não encontrado"));
+	}
+	
+	public List<Post> findByTitle(String text) {
+		return repo.findByTitleContainingIgnoreCase(text);
 	}
 }
